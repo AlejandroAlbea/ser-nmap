@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>nmap.md</title>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+
+<style>
+/* https://github.com/microsoft/vscode/blob/master/extensions/markdown-language-features/media/markdown.css */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+body {
+	font-family: var(--vscode-markdown-font-family, -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif);
+	font-size: var(--vscode-markdown-font-size, 14px);
+	padding: 0 26px;
+	line-height: var(--vscode-markdown-line-height, 22px);
+	word-wrap: break-word;
+}
+
+#code-csp-warning {
+	position: fixed;
+	top: 0;
+	right: 0;
+	color: white;
+	margin: 16px;
+	text-align: center;
+	font-size: 12px;
+	font-family: sans-serif;
+	background-color:#444444;
+	cursor: pointer;
+	padding: 6px;
+	box-shadow: 1px 1px 1px rgba(0,0,0,.25);
+}
+
+#code-csp-warning:hover {
+	text-decoration: none;
+	background-color:#007acc;
+	box-shadow: 2px 2px 2px rgba(0,0,0,.25);
+}
+
+body.scrollBeyondLastLine {
+	margin-bottom: calc(100vh - 22px);
+}
+
+body.showEditorSelection .code-line {
+	position: relative;
+}
+
+body.showEditorSelection .code-active-line:before,
+body.showEditorSelection .code-line:hover:before {
+	content: "";
+	display: block;
+	position: absolute;
+	top: 0;
+	left: -12px;
+	height: 100%;
+}
+
+body.showEditorSelection li.code-active-line:before,
+body.showEditorSelection li.code-line:hover:before {
+	left: -30px;
+}
+
+.vscode-light.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.15);
+}
+
+.vscode-light.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.40);
+}
+
+.vscode-light.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-dark.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.4);
+}
+
+.vscode-dark.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.60);
+}
+
+.vscode-dark.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-high-contrast.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 160, 0, 0.7);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 160, 0, 1);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+img {
+	max-width: 100%;
+	max-height: 100%;
+}
+
+a {
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+a:focus,
+input:focus,
+select:focus,
+textarea:focus {
+	outline: 1px solid -webkit-focus-ring-color;
+	outline-offset: -1px;
+}
+
+hr {
+	border: 0;
+	height: 2px;
+	border-bottom: 2px solid;
+}
+
+h1 {
+	padding-bottom: 0.3em;
+	line-height: 1.2;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+}
+
+h1, h2, h3 {
+	font-weight: normal;
+}
+
+table {
+	border-collapse: collapse;
+}
+
+table > thead > tr > th {
+	text-align: left;
+	border-bottom: 1px solid;
+}
+
+table > thead > tr > th,
+table > thead > tr > td,
+table > tbody > tr > th,
+table > tbody > tr > td {
+	padding: 5px 10px;
+}
+
+table > tbody > tr + tr > td {
+	border-top: 1px solid;
+}
+
+blockquote {
+	margin: 0 7px 0 5px;
+	padding: 0 16px 0 10px;
+	border-left-width: 5px;
+	border-left-style: solid;
+}
+
+code {
+	font-family: Menlo, Monaco, Consolas, "Droid Sans Mono", "Courier New", monospace, "Droid Sans Fallback";
+	font-size: 1em;
+	line-height: 1.357em;
+}
+
+body.wordWrap pre {
+	white-space: pre-wrap;
+}
+
+pre:not(.hljs),
+pre.hljs code > div {
+	padding: 16px;
+	border-radius: 3px;
+	overflow: auto;
+}
+
+pre code {
+	color: var(--vscode-editor-foreground);
+	tab-size: 4;
+}
+
+/** Theming */
+
+.vscode-light pre {
+	background-color: rgba(220, 220, 220, 0.4);
+}
+
+.vscode-dark pre {
+	background-color: rgba(10, 10, 10, 0.4);
+}
+
+.vscode-high-contrast pre {
+	background-color: rgb(0, 0, 0);
+}
+
+.vscode-high-contrast h1 {
+	border-color: rgb(0, 0, 0);
+}
+
+.vscode-light table > thead > tr > th {
+	border-color: rgba(0, 0, 0, 0.69);
+}
+
+.vscode-dark table > thead > tr > th {
+	border-color: rgba(255, 255, 255, 0.69);
+}
+
+.vscode-light h1,
+.vscode-light hr,
+.vscode-light table > tbody > tr + tr > td {
+	border-color: rgba(0, 0, 0, 0.18);
+}
+
+.vscode-dark h1,
+.vscode-dark hr,
+.vscode-dark table > tbody > tr + tr > td {
+	border-color: rgba(255, 255, 255, 0.18);
+}
+
+</style>
+
+<style>
+/* Tomorrow Theme */
+/* http://jmblog.github.com/color-themes-for-google-code-highlightjs */
+/* Original theme - https://github.com/chriskempson/tomorrow-theme */
+
+/* Tomorrow Comment */
+.hljs-comment,
+.hljs-quote {
+	color: #8e908c;
+}
+
+/* Tomorrow Red */
+.hljs-variable,
+.hljs-template-variable,
+.hljs-tag,
+.hljs-name,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-regexp,
+.hljs-deletion {
+	color: #c82829;
+}
+
+/* Tomorrow Orange */
+.hljs-number,
+.hljs-built_in,
+.hljs-builtin-name,
+.hljs-literal,
+.hljs-type,
+.hljs-params,
+.hljs-meta,
+.hljs-link {
+	color: #f5871f;
+}
+
+/* Tomorrow Yellow */
+.hljs-attribute {
+	color: #eab700;
+}
+
+/* Tomorrow Green */
+.hljs-string,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-addition {
+	color: #718c00;
+}
+
+/* Tomorrow Blue */
+.hljs-title,
+.hljs-section {
+	color: #4271ae;
+}
+
+/* Tomorrow Purple */
+.hljs-keyword,
+.hljs-selector-tag {
+	color: #8959a8;
+}
+
+.hljs {
+	display: block;
+	overflow-x: auto;
+	color: #4d4d4c;
+	padding: 0.5em;
+}
+
+.hljs-emphasis {
+	font-style: italic;
+}
+
+.hljs-strong {
+	font-weight: bold;
+}
+</style>
+
+<style>
+/*
+ * Markdown PDF CSS
+ */
+
+ body {
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif, "Meiryo";
+	padding: 0 12px;
+}
+
+pre {
+	background-color: #222222;
+	border: 1px solid #cccccc;
+	border-radius: 3px;
+	overflow-x: auto;
+	white-space: pre-wrap;
+	overflow-wrap: break-word;
+}
+
+pre:not(.hljs) {
+	padding: 23px;
+	line-height: 19px;
+}
+
+blockquote {
+	background: rgba(127, 127, 127, 0.1);
+	border-color: rgba(0, 122, 204, 0.5);
+}
+
+.emoji {
+	height: 1.4em;
+}
+
+code {
+	font-size: 14px;
+	line-height: 19px;
+}
+
+/* for inline code */
+:not(pre):not(.hljs) > code {
+	color: #C9AE75; /* Change the old color so it seems less like an error */
+	font-size: inherit;
+}
+
+/* Page Break : use <div class="page"/> to insert page break
+-------------------------------------------------------- */
+.page {
+	page-break-after: always;
+}
+
+</style>
+
+<script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
+</head>
+<body>
+  <script>
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: document.body.classList.contains('vscode-dark') || document.body.classList.contains('vscode-high-contrast')
+          ? 'dark'
+          : 'default'
+    });
+  </script>
+<h1 id="informe-de-escaneo-b%C3%A1sico-de-dispositivos-activos-en-la-red">Informe de escaneo básico de dispositivos activos en la red</h1>
+<p><strong>Descripción del Escaneo:</strong></p>
+<p>Se realizó un escaneo básico de ping sobre el rango de direcciones IP de la red local (<code>192.168.1.0/24</code>) utilizando la herramienta Nmap. Este escaneo es útil para detectar dispositivos que están activos en la red, es decir, aquellos que responden a un ping. A continuación, se detalla la información obtenida durante el escaneo.</p>
+<hr>
+<h4 id="resultado-del-escaneo">Resultado del Escaneo:</h4>
+<p><img src="image-10.png" alt="alt text"></p>
+<p><strong>Dispositivos detectados en la red:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Dirección IP</th>
+<th>Nombre del Dispositivo</th>
+<th>Latencia</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>192.168.1.1</td>
+<td>No disponible</td>
+<td>0.0027s</td>
+</tr>
+<tr>
+<td>192.168.1.10</td>
+<td>No disponible</td>
+<td>0.035s</td>
+</tr>
+<tr>
+<td>192.168.1.12</td>
+<td>No disponible</td>
+<td>0.012s</td>
+</tr>
+<tr>
+<td>192.168.1.25</td>
+<td>No disponible</td>
+<td>0.00012s</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<p><strong>Análisis y Utilidad del Escaneo:</strong></p>
+<p>Este tipo de escaneo es útil para:</p>
+<ol>
+<li>
+<p><strong>Monitorear la red</strong>: Identificar qué dispositivos están activos en la red en un momento determinado. Esto puede ayudar a detectar dispositivos no autorizados o conexiones inesperadas.</p>
+</li>
+<li>
+<p><strong>Diagnóstico de conectividad</strong>: Permite verificar si los dispositivos importantes en la red (como routers, servidores o dispositivos de almacenamiento) están funcionando correctamente y respondiendo al ping.</p>
+</li>
+<li>
+<p><strong>Administración de red</strong>: Conocer las direcciones IP de los dispositivos conectados es fundamental para gestionar recursos de la red de manera eficiente, como la asignación de IPs, la configuración de accesos o la resolución de problemas de conectividad.</p>
+</li>
+<li>
+<p><strong>Seguridad</strong>: Es una primera línea de defensa para verificar si algún dispositivo sospechoso ha ingresado a la red. Si se detectan dispositivos que no deberían estar conectados, se puede actuar de inmediato.</p>
+</li>
+</ol>
+<hr>
+<p>Este tipo de escaneo es fundamental en redes corporativas o domésticas para garantizar que los dispositivos clave estén activos y que no haya intrusiones inesperadas.</p>
+<hr>
+<h1 id="informe-de-escaneo-de-puertos-y-servicios-en-dispositivos-de-la-red">Informe de Escaneo de Puertos y Servicios en Dispositivos de la Red</h1>
+<p><strong>Descripción del Escaneo:</strong></p>
+<p>Se han realizado dos escaneos de puertos en dispositivos clave de la red local. El primer escaneo fue ejecutado sobre la dirección IP de la máquina local (<code>192.168.1.140</code>), mientras que el segundo escaneo fue dirigido al router de la red (<code>192.168.1.1</code>). Estos escaneos tienen como objetivo identificar los puertos abiertos y los servicios que se están ejecutando en cada dispositivo.</p>
+<hr>
+<p><img src="image-11.png" alt="alt text"></p>
+<h4 id="resultado-del-escaneo-en-la-m%C3%A1quina-local-1921681140">Resultado del Escaneo en la Máquina Local (<code>192.168.1.140</code>):</h4>
+<p><strong>Dispositivo escaneado</strong>: Máquina local<br>
+<strong>IP</strong>: <code>192.168.1.140</code><br>
+<strong>MAC Address</strong>: <code>50:EB:F6:91:5D:24 (ASUSTek Computer)</code><br>
+<strong>Estado del Host</strong>: Activo (latencia de 0.00018s)</p>
+<p><strong>Puertos escaneados</strong>: 1000 puertos TCP comunes<br>
+<strong>Resultado</strong>:</p>
+<ul>
+<li>Todos los puertos están en estado &quot;filtrado&quot;, lo que nos indica que un firewall (en este caso el de Windows) está bloqueando la comunicación con estos puertos.</li>
+</ul>
+<p><strong>Análisis</strong>:</p>
+<ul>
+<li>El hecho de que todos los puertos estén filtrados sugiere que la máquina está protegida por un firewall que impide conexiones no autorizadas. No se han encontrado puertos abiertos, lo cual es positivo desde una perspectiva de seguridad.</li>
+</ul>
+<hr>
+<h4 id="resultado-del-escaneo-en-el-router-19216811">Resultado del Escaneo en el Router (<code>192.168.1.1</code>):</h4>
+<p><strong>Dispositivo escaneado</strong>: Router<br>
+<strong>IP</strong>: <code>192.168.1.1</code><br>
+<strong>MAC Address</strong>: <code>B4:5F:84:F1:74:BC (ZTE)</code><br>
+<strong>Estado del Host</strong>: Activo (latencia de 0.0025s)</p>
+<p><strong>Puertos Abiertos y Servicios Detectados</strong>:</p>
+<table>
+<thead>
+<tr>
+<th>Puerto</th>
+<th>Estado</th>
+<th>Servicio</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>22/tcp</td>
+<td>Filtrado</td>
+<td>SSH</td>
+</tr>
+<tr>
+<td>53/tcp</td>
+<td>Abierto</td>
+<td>DNS (Domain)</td>
+</tr>
+<tr>
+<td>80/tcp</td>
+<td>Abierto</td>
+<td>HTTP</td>
+</tr>
+<tr>
+<td>139/tcp</td>
+<td>Abierto</td>
+<td>NetBIOS-SSN</td>
+</tr>
+<tr>
+<td>443/tcp</td>
+<td>Abierto</td>
+<td>HTTPS</td>
+</tr>
+<tr>
+<td>445/tcp</td>
+<td>Abierto</td>
+<td>Microsoft-DS</td>
+</tr>
+<tr>
+<td>52869/tcp</td>
+<td>Abierto</td>
+<td>Unknown</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Análisis</strong>:</p>
+<ul>
+<li><strong>Puerto 22 (SSH)</strong>: Está filtrado, lo que indica que el servicio de SSH está siendo protegido por un firewall. Esto es positivo desde un punto de vista de seguridad, ya que SSH puede ser un objetivo de ataques si está abierto sin protección adecuada.</li>
+<li><strong>Puerto 53 (DNS)</strong>: El servicio de DNS está activo y es fundamental para la resolución de nombres en la red.</li>
+<li><strong>Puerto 80 (HTTP) y 443 (HTTPS)</strong>: Estos puertos corresponden a los servicios web del router, lo que sugiere que el router tiene una interfaz web accesible para su administración.</li>
+<li><strong>Puerto 139 (NetBIOS-SSN) y 445 (Microsoft-DS)</strong>: Estos puertos son utilizados por el protocolo de compartición de archivos de Windows (SMB), lo que podría implicar que el router tiene habilitados servicios de compartición de recursos.</li>
+<li><strong>Puerto 52869 (Unknown)</strong>: Es un puerto desconocido que está abierto. Esto podría requerir una mayor investigación para identificar qué servicio o aplicación está utilizando este puerto.</li>
+</ul>
+<hr>
+<h3 id="reflexi%C3%B3n-sobre-la-importancia-de-los-puertos-abiertos-y-las-implicaciones-de-seguridad">Reflexión sobre la Importancia de los Puertos Abiertos y las Implicaciones de Seguridad:</h3>
+<ol>
+<li>
+<p><strong>Máquina Local</strong>:</p>
+<ul>
+<li>El hecho de que todos los puertos estén filtrados es una buena señal de seguridad, ya que reduce el riesgo de acceso no autorizado a la máquina. No obstante, es importante monitorear cualquier cambio en la configuración de firewall o la apertura de nuevos puertos para evitar vulnerabilidades.</li>
+</ul>
+</li>
+<li>
+<p><strong>Router</strong>:</p>
+<ul>
+<li><strong>Importancia de los Puertos Abiertos</strong>: Los puertos abiertos en el router permiten que ciertos servicios sean accesibles, como la administración web o la resolución de nombres DNS. Estos servicios son esenciales para el funcionamiento de la red.</li>
+<li><strong>Riesgos de Seguridad</strong>: Tener puertos como el 139 y el 445 abiertos puede suponer un riesgo, ya que estos puertos son comúnmente explotados en ataques que buscan vulnerabilidades en el protocolo SMB (como el famoso ataque WannaCry). Es recomendable desactivar estos puertos si no se están utilizando activamente.</li>
+<li><strong>Puerto desconocido (52869)</strong>: La existencia de un puerto abierto no identificado puede representar un riesgo, ya que podría ser utilizado por un servicio no controlado. Es importante investigar más a fondo este puerto y tomar medidas si se trata de un servicio no autorizado.</li>
+</ul>
+</li>
+</ol>
+<hr>
+<h3 id="bloqueo-del-puerto-445-y-139">Bloqueo del puerto <code>445 y 139</code></h3>
+<p><strong>Descripción del procedimiento:</strong></p>
+<p>Gracias al escaneo he podido observar que los puertos correspondientes al servicio de SMB el cual nos sirve para la transferencia de archivos por red estaban abiertos, he accedido al router para desactivar este servicio y así poder garantizar mayor seguirdad a mi red.</p>
+<p><img src="image-12.png" alt="alt text"></p>
+<p>Una vez realizado el ajuste podemos volver a realizar el escaneo para comprobar de que ya no se encuentran disponibles:</p>
+<p><img src="image-13.png" alt="alt text"></p>
+<h1 id="informe-identificaci%C3%B3n-de-servicios-y-sistema-operativo">Informe: Identificación de Servicios y Sistema Operativo</h1>
+<h4 id="dispositivo-escaneado-192168118">Dispositivo escaneado: 192.168.1.18</h4>
+<hr>
+<h3 id="1-identificaci%C3%B3n-de-servicios-y-versiones">1. <strong>Identificación de Servicios y Versiones:</strong></h3>
+<p><strong>Comando usado:</strong> <code>sudo nmap -sV 192.168.1.18</code></p>
+<p><strong>Resultado del escaneo:</strong></p>
+<ul>
+<li><strong>49152/tcp</strong>: <code>tcpwrapped</code> (se refiere a un servicio envuelto por TCP que no permite identificar la aplicación subyacente).</li>
+<li><strong>62078/tcp</strong>: <code>tcpwrapped</code> / <code>iphone-sync</code> (este puerto se asocia con dispositivos Apple y se usa para la sincronización con iTunes).</li>
+</ul>
+<p>El servicio <code>tcpwrapped</code> significa que el puerto está protegido y no se pudo identificar el servicio exacto debido a mecanismos de seguridad, como firewalls o configuraciones específicas que previenen la identificación directa del servicio.</p>
+<hr>
+<h3 id="2-identificaci%C3%B3n-del-sistema-operativo">2. <strong>Identificación del Sistema Operativo:</strong></h3>
+<p><strong>Comando usado:</strong> <code>sudo nmap -O 192.168.1.18</code></p>
+<p><strong>Resultado del escaneo:</strong></p>
+<ul>
+<li>
+<p><strong>Puertos abiertos</strong>:</p>
+<ul>
+<li><strong>49152/tcp</strong>: Desconocido.</li>
+<li><strong>62078/tcp</strong>: <code>iphone-sync</code>, asociado con la sincronización de dispositivos iOS.</li>
+</ul>
+</li>
+<li>
+<p><strong>Sistema operativo detectado</strong>: <strong>No se pudo identificar el sistema operativo exacto</strong>. La huella digital de TCP/IP no coincidió con un sistema operativo conocido en la base de datos de Nmap, pero es probable que el dispositivo sea un <strong>iPhone o un dispositivo Apple</strong> debido al puerto 62078 que está asociado con la sicronización de iTunes en iOS.</p>
+</li>
+</ul>
+<hr>
+<h2 id="alt-text"><img src="image-14.png" alt="alt text"></h2>
+<h3 id="3-reflexi%C3%B3n-sobre-la-informaci%C3%B3n-recopilada">3. <strong>Reflexión sobre la Información Recopilada:</strong></h3>
+<h4 id="importancia-de-conocer-los-servicios-y-sistemas-operativos"><strong>Importancia de Conocer los Servicios y Sistemas Operativos:</strong></h4>
+<ul>
+<li>
+<p><strong>Detección de Servicios</strong>: Identificar los servicios que se ejecutan en un dispositivo permite a los administradores de red conocer qué aplicaciones o servicios están activos. Esto es esencial para garantizar que no haya servicios no autorizados o innecesarios expuestos en la red, lo que podría representar vulnerabilidades de seguridad.</p>
+</li>
+<li>
+<p><strong>Detección de Sistema Operativo</strong>: Conocer el sistema operativo ayuda a determinar las posibles vulnerabilidades inherentes a ese sistema, permitiendo aplicar las medidas de seguridad adecuadas, como actualizaciones, parches o configuraciones de firewall específicas. También es útil para gestionar las políticas de acceso y monitoreo de dispositivos.</p>
+</li>
+</ul>
+<h4 id="impacto-en-la-seguridad-de-la-red"><strong>Impacto en la Seguridad de la Red:</strong></h4>
+<ul>
+<li>
+<p><strong>Servicios no documentados</strong>: La presencia de puertos &quot;tcpwrapped&quot; indica que hay ciertos mecanismos que ocultan los servicios subyacentes, lo cual es una práctica de seguridad útil por parte de Apple, pero también nos puede complicar la administración si no se tiene claro qué servicios están ejecutando. Es importante asegurarse de que solo los servicios necesarios estén habilitados y accesibles.</p>
+</li>
+<li>
+<p><strong>Dispositivos móviles en la red</strong>: En este caso, un iPhone parece estar ejecutando servicios que podrían permitir la sincronización con otros dispositivos (como iTunes). Estos servicios abiertos podrían ser un objetivo para atacantes si no están correctamente asegurados.</p>
+</li>
+</ul>
+<h1 id="informe-de-an%C3%A1lisis-de-vulnerabilidades">Informe de Análisis de Vulnerabilidades</h1>
+<h4 id="dispositivo-escaneado-19216811-router">Dispositivo Escaneado: <strong>192.168.1.1 (Router)</strong></h4>
+<hr>
+<h3 id="vulnerabilidades-detectadas"><strong>Vulnerabilidades Detectadas:</strong></h3>
+<p><strong>Comando utilizado:</strong></p>
+<pre class="hljs"><code><div>nmap --script vuln 192.168.1.1
+</div></code></pre>
+<hr>
+<p><strong>1. Slowloris DOS attack</strong></p>
+<ul>
+<li><strong>Puerto afectado:</strong> 443/tcp (HTTPS)</li>
+<li><strong>Estado:</strong> Probablemente vulnerable</li>
+<li><strong>Identificador CVE:</strong> <a href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2007-6750">CVE-2007-6750</a></li>
+<li><strong>Descripción:</strong> El ataque de Slowloris intenta mantener abiertas muchas conexiones al servidor web y las deja abiertas el mayor tiempo posible, enviando solicitudes parciales que acaban agotando los recursos del servidor. Esto puede provocar un ataque de denegación de servicio (DoS), impidiendo que otros usuarios legítimos puedan acceder al servicio web.</li>
+<li><strong>Referencia:</strong> <a href="http://ha.ckers.org/slowloris/">ha.ckers.org/slowloris</a></li>
+</ul>
+<hr>
+<h3 id="acciones-para-mitigar-las-vulnerabilidades"><strong>Acciones para mitigar las vulnerabilidades:</strong></h3>
+<ol>
+<li><strong>Mitigación del ataque Slowloris en el puerto 443 (HTTPS):</strong>
+<ul>
+<li><strong>Implementar un firewall:</strong> Utilizar un firewall con capacidades de mitigación de ataques de tipo DoS que limite la cantidad de conexiones simultáneas que se pueden mantener abiertas desde una única dirección IP.</li>
+<li><strong>Timeouts más agresivos:</strong> Configurar tiempos de espera más cortos para las conexiones HTTP/HTTPS en el servidor web, de manera que las conexiones que no se completen rápidamente se cierren.</li>
+<li><strong>Uso de proxy inverso:</strong> Implementar un proxy inverso como NGINX o HAProxy para gestionar las conexiones de manera más eficiente y evitar que los ataques DoS sobrecarguen el servidor web directamente.</li>
+<li><strong>Limitación de clientes:</strong> Limitar el número de clientes simultáneos que pueden conectarse desde la misma dirección IP o subred.</li>
+<li><strong>Uso de HTTPS/2:</strong> Migrar a HTTP/2, que gestiona las conexiones de manera más eficiente, evitando algunos tipos de ataques como Slowloris.</li>
+</ul>
+</li>
+</ol>
+<hr>
+<h3 id="importancia-de-la-gesti%C3%B3n-de-vulnerabilidades"><strong>Importancia de la Gestión de Vulnerabilidades:</strong></h3>
+<h2 id="detectar-y-gestionar-las-vulnerabilidades-es-fundamental-para-proteger-la-red-y-los-dispositivos-de-ataques-que-puedan-comprometer-la-disponibilidad-y-la-integridad-de-los-servicios-en-este-caso-el-ataque-slowloris-podr%C3%ADa-inutilizar-el-servidor-https-del-router-lo-que-afectar%C3%ADa-a-los-usuarios-que-intenten-acceder-a-servicios-seguros-a-trav%C3%A9s-del-puerto-443">Detectar y gestionar las vulnerabilidades es fundamental para proteger la red y los dispositivos de ataques que puedan comprometer la disponibilidad y la integridad de los servicios. En este caso, el ataque Slowloris podría inutilizar el servidor HTTPS del router, lo que afectaría a los usuarios que intenten acceder a servicios seguros a través del puerto 443.</h2>
+<h3 id="conclusi%C3%B3n-final"><strong>Conclusión Final:</strong></h3>
+<p><strong>Lecciones Aprendidas sobre los Dispositivos y Servicios Activos:</strong></p>
+<ul>
+<li>
+<p>He aprendido que en nuestra red hay varios servicios esenciales activos, como HTTP, HTTPS, y DNS. Algunos de ellos presentan vulnerabilidades que podrían explotarse en un ataque</p>
+</li>
+<li>
+<p>Es crucial identificar estos servicios y sus puertos asociados para garantizar la seguridad de la red. En este caso, el puerto 443, que gestiona conexiones HTTPS, es potencialmente vulnerable al ataque de Slowloris, lo que podría afectar a la disponibilidad del servicio web.</p>
+</li>
+</ul>
+<p><strong>Propuestas para Mejorar la Protección de la Red:</strong></p>
+<ul>
+<li><strong>Cerrar puertos innecesarios:</strong> Eliminar o deshabilitar servicios que no sean críticos, como NetBIOS (puerto 139) y SMB (puerto 445), para minimizar la superficie de ataque. Esto en caso de no hacer uso del mismo.</li>
+<li><strong>Implementar firewalls y filtros:</strong> Usar un firewall para filtrar el tráfico entrante y bloquear ataques de denegación de servicio como Slowloris. En una red local de un hogar puede ser algo excesivo, pero en un entorno laboral es fundamental.</li>
+</ul>
+<p><strong>Utilidad de Nmap en un Entorno Laboral Real:</strong></p>
+<ul>
+<li>Nmap es muy útil para auditar redes en tiempo real, identificar servicios activos y detectar vulnerabilidades. Su capacidad de escanear puertos y sistemas operativos es esencial para los administradores de redes, que pueden usar esta herramienta para hacer auditorías de seguridad periódicas y así asegurar la infraestructura.</li>
+</ul>
+
+</body>
+</html>
